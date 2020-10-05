@@ -1,5 +1,5 @@
 # # -*- coding: utf-8 -*-
-from Controller.app import app
+from web.app import app
 
 application = app.server
 if __name__ == '__main__':

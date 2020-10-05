@@ -1,3 +1,5 @@
 env
 README.md
 LICENSE
+.vscode
+__pycache__
