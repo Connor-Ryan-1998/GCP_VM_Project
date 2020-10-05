@@ -1,5 +1,9 @@
-FROM tutum/nginx
+FROM nginx:latest
 
-RUN rm /etc/nginx/sites-enabled/default
+EXPOSE 80
 
-COPY sites-enabled/ /etc/nginx/sites-enabled
+#Remove default
+RUN rm /etc/nginx/conf.d/default.conf
+
+COPY sites-enabled/app.conf /etc/nginx/conf.d
+
