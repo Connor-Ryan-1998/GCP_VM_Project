@@ -2,7 +2,11 @@
 Flask application to sit on GCP VM
 
 sudo apt update -y;sudo apt upgrade -y
-sudo apt install software-properties-common
+
+
+----TO ADD
+sudo apt-get install libpcre3 libpcre3-dev gcc
+----
 
 sudo curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname
 -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -19,12 +23,12 @@ docker-compose ps
 
 ## To install python 3.8 for testing before compose
 sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt install python3.8 -y
+sudo apt install python3.8 python3-pip  -y
 
 sudo docker build -t a1:latest .
 
 #running docker build 
-sudo docker run -p :9090 a1
+sudo docker run -p :9090 -d a1
 
 
 -- View inside
