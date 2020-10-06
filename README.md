@@ -20,3 +20,12 @@ docker-compose ps
 ## To install python 3.8 for testing before compose
 sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt install python3.8 -y
+
+sudo docker build -t a1:latest .
+
+#running docker build 
+sudo docker run -p :9090 a1
+
+
+-- View inside
+sudo docker run -it a1 sh 
