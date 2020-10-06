@@ -39,3 +39,4 @@ urllib3==1.25.10
 webencodings==0.5.1
 Werkzeug==1.0.1
 yfinance==0.1.54
+updatuWSGI==2.0.19.1

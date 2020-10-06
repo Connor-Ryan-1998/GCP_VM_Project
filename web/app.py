@@ -22,10 +22,10 @@ yf.pdr_override()
 app = dash.Dash(
     server=server, external_stylesheets=external_stylesheets, url_base_pathname='/')
 
-# df = pdr.get_data_yahoo("SPY", start="2017-01-01", end="2017-04-30")
-# fig = px.scatter(df, x=df.index, y='Close')
+df = pdr.get_data_yahoo("SPY", start="2017-01-01", end="2017-04-30")
+fig = px.scatter(df, x=df.index, y='Close')
 app.layout = html.Div(children=[
     html.H4(children='SPY Close values for 2017'),
     html.Div(
-        dcc.Graph()),
+        dcc.Graph(figure=fig)),
 ])
