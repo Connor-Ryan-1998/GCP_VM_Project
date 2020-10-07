@@ -6,6 +6,6 @@ EXPOSE 80
 RUN rm /etc/nginx/conf.d/default.conf
 
 #copy over new config
-COPY app.conf/app.conf /etc/nginx/conf.d
+COPY nginx.conf /etc/nginx/conf.d
 
 

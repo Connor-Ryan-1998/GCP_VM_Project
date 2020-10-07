@@ -1,60 +1,25 @@
 version: '3.7'
 services:
-  dash:
-    image: dash
+  flask:
+    image: webapp-flask
     build: ./web
+    ports:
+      - 9090:9090
     volumes:
-      - "./:/app"
+      - "./:/run"
+    networks: 
+      - prodnetwork
 
   nginx:
     image: nginx
+    restart: always
     build: ./nginx
     ports:
-      - 9090:80
+      - 80:80
     depends_on:
-      - dash
-
-# version: '3.7'
-
-# services:
-#   web:
-#     restart: always
-#     build: ./web
-#     expose:
-#       - "8000"
-#     links:
-#       - postgres:postgres
-#     volumes:
-#       - web-data:/usr/src/app/static
-#     env_file: 
-#       - .env
-#     command: /usr/local/bin/gunicorn -w 2 -b :8000 app:app
-
-#   nginx:
-#     restart: always
-#     build: ./nginx
-#     ports:
-#       - "80:80"
-#     volumes:
-#       - .:/www/static
-#       - web-data:/usr/src/app/static
-#     links:
-#       - web:web
-
-#   data:
-#     image: postgres:latest
-#     volumes:
-#       - db-data:/var/lib/postgresql/data
-#     command: "true"
-
-#   postgres:
-#     restart: always
-#     image: postgres:latest
-#     volumes:
-#       - db-data:/var/lib/postgresql/data
-#     ports:
-#       - "5432:5432"
-
-# volumes:
-#   db-data:
-#   web-data:
+      - flask
+    networks: 
+      - prodnetwork
+      
+networks: 
+  prodnetwork:
