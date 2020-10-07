@@ -27,7 +27,7 @@ sudo apt install python3.8 python3-pip  -y
 sudo docker build -t a1:latest .
 
 #running docker build 
-sudo docker run -p :9090 -d a1
+sudo docker run -p 9090:9090 -d a1
 
 
 -- View inside

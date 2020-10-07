@@ -1,60 +1,60 @@
-# version: '3.7'
-# services:
-#   dash:
-#     image: dash
-#     build: ./web
-#     volumes:
-#       - "./:/app"
-
-#   nginx:
-#     image: nginx
-#     build: ./nginx
-#     ports:
-#       - 8080:80
-#     depends_on:
-#       - dash
-
 version: '3.7'
-
 services:
-  web:
-    restart: always
+  dash:
+    image: dash
     build: ./web
-    expose:
-      - "8000"
-    links:
-      - postgres:postgres
     volumes:
-      - web-data:/usr/src/app/static
-    env_file: 
-      - .env
-    command: /usr/local/bin/gunicorn -w 2 -b :8000 app:app
+      - "./:/app"
 
   nginx:
-    restart: always
+    image: nginx
     build: ./nginx
     ports:
-      - "80:80"
-    volumes:
-      - .:/www/static
-      - web-data:/usr/src/app/static
-    links:
-      - web:web
+      - 9090:80
+    depends_on:
+      - dash
 
-  data:
-    image: postgres:latest
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    command: "true"
+# version: '3.7'
 
-  postgres:
-    restart: always
-    image: postgres:latest
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+# services:
+#   web:
+#     restart: always
+#     build: ./web
+#     expose:
+#       - "8000"
+#     links:
+#       - postgres:postgres
+#     volumes:
+#       - web-data:/usr/src/app/static
+#     env_file: 
+#       - .env
+#     command: /usr/local/bin/gunicorn -w 2 -b :8000 app:app
 
-volumes:
-  db-data:
-  web-data:
+#   nginx:
+#     restart: always
+#     build: ./nginx
+#     ports:
+#       - "80:80"
+#     volumes:
+#       - .:/www/static
+#       - web-data:/usr/src/app/static
+#     links:
+#       - web:web
+
+#   data:
+#     image: postgres:latest
+#     volumes:
+#       - db-data:/var/lib/postgresql/data
+#     command: "true"
+
+#   postgres:
+#     restart: always
+#     image: postgres:latest
+#     volumes:
+#       - db-data:/var/lib/postgresql/data
+#     ports:
+#       - "5432:5432"
+
+# volumes:
+#   db-data:
+#   web-data:
