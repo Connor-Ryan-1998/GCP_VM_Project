@@ -4,9 +4,8 @@ Flask application to sit on GCP VM
 sudo apt update -y;sudo apt upgrade -y
 
 
-----TO ADD
 sudo apt-get install libpcre3 libpcre3-dev gcc
-----
+
 
 sudo curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname
 -s)-$(uname -m)" -o /usr/local/bin/docker-compose
