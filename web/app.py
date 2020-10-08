@@ -1,7 +1,6 @@
 # Module Imports
 from flask import Flask, session, copy_current_request_context, request, Flask, jsonify, make_response, redirect
 from dash.dependencies import Input, Output, State
-import pandas as pd
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 import dash_core_components as dcc

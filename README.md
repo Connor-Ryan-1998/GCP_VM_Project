@@ -16,15 +16,7 @@ sudo docker-compose -f docker-compose.yml up -d
 # Test/Debug
 docker-compose ps
 
-## To install python 3.8 for testing before compose
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt install python3.8 python3-pip  -y
-
-sudo docker build -t a1:latest .
-
-#running docker build 
-sudo docker run -p 9090:9090 -d a1
-
+sudo docker-compose down
 
 -- View inside
 sudo docker run -it a1 sh 
