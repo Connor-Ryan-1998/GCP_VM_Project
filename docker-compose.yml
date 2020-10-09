@@ -5,6 +5,8 @@ services:
     build: ./web
     ports:
       - 9090:9090
+    depends_on: 
+      - postgres
     volumes:
       - "./:/run"
     networks: 
@@ -20,6 +22,18 @@ services:
       - flask
     networks: 
       - prodnetwork
-      
+
+    postgres:
+      environment:
+        .env
+      image: postgres:latest
+      networks:
+        - prodnetwork
+      ports:
+        - :5432
+      restart: always
+      volumes:
+        - ./postgres-data:/var/lib/postgresql/data
+
 networks: 
   prodnetwork:

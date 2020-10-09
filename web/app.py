@@ -4,6 +4,7 @@ from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 import dash_core_components as dcc
+import flask_sqlalchemy
 import plotly.express as px
 import dash
 import flask
@@ -17,6 +18,21 @@ external_stylesheets = [dbc.themes.BOOTSTRAP]
 server = flask.Flask(__name__)
 server.config['SECRET_KEY'] = os.urandom(24)
 yf.pdr_override()
+
+class Config(object):
+    """Base Configuration"""
+    try:
+        user = os.environ["POSTGRES_USER"]
+        password = os.environ["POSTGRES_PASSWORD"]
+        hostname = os.environ["POSTGRES_HOSTNAME"]
+        port = os.environ["POSTGRES_PORT"]
+        database = os.environ["APPLICATION_DB"]
+        SQLALCHEMY_DATABASE_URI = (
+            f"postgresql+psycopg2://{user}:{password}@{hostname}:{port}/{database}"
+        )
+        SQLALCHEMY_TRACK_MODIFICATIONS = False
+    except Exception as e:
+        print('Database config error: '+str(e))
 
 app = dash.Dash(
     server=server, external_stylesheets=external_stylesheets, url_base_pathname='/')

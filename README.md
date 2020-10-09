@@ -16,10 +16,3 @@ sudo docker-compose -f docker-compose.yml up -d
 
 # Test/Debug
 sudo docker-compose ps
-
-sudo docker-compose down
-sudo docker image rm nginx
-
-
--- View inside
-sudo docker run -it a1 sh 
