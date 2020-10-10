@@ -22,10 +22,12 @@ services:
       - flask
     networks: 
       - prodnetwork
-
     postgres:
       environment:
-        .env
+        POSTGRES_USER:  postgres
+        POSTGRES_PASSWORD: password 
+        APPLICATION_DB: production
+        POSTGRES_HOSTNAME: postgres
       image: postgres:latest
       networks:
         - prodnetwork
