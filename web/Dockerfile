@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 
 RUN apt update -y;  apt upgrade -y
-RUN apt install libpcre3 libpcre3-dev gcc -y
+RUN apt install libpcre3 libpcre3-dev libpq-dev python-dev gcc -y
 RUN apt install software-properties-common -y
 RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt install python3.8 python3-pip  -y

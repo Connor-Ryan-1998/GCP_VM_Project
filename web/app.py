@@ -19,23 +19,54 @@ server = flask.Flask(__name__)
 server.config['SECRET_KEY'] = os.urandom(24)
 yf.pdr_override()
 
-
-
 app = dash.Dash(
     server=server, external_stylesheets=external_stylesheets, url_base_pathname='/')
 
-engine = create_engine('postgresql+psycopg2://postgres:password@localhost/postgres')
-
-data = ""
-with engine.connect() as con:
-    result = con.execute("SELECT * FROM information_schema.tables")
-    for row in result:
-        data = data +row 
+navbar = dbc.NavbarSimple(
+    children=[
+        dbc.NavItem(dbc.NavLink("", href="#")),
+        dbc.DropdownMenu(
+            children=[
+                dbc.DropdownMenuItem("More pages", header=True),
+                dbc.DropdownMenuItem("Page 2", href="#"),
+                dbc.DropdownMenuItem("Page 3", href="#"),
+            ],
+            nav=True,
+            in_navbar=True,
+            label="More",
+        ),    
+    html.Div([
+        dbc.Button("Login", id="Login"),
+            dbc.Modal(
+            [
+                dbc.ModalHeader("Header"),
+                dbc.ModalBody("This is the content of the modal"),
+                dbc.ModalFooter(
+                    dbc.Button("Close", id="close", className="ml-auto")
+                ),
+            ],
+            id="modal",
+        )]),
+    ],
+    brand="NavbarSimple",
+    brand_href="#",
+    color="primary",
+    dark=True,
+)
 df = pdr.get_data_yahoo("SPY", start="2017-01-01", end="2017-04-30")
 fig = px.scatter(df, x=df.index, y='Close')
-app.layout = html.Div(children=[
+app.layout = html.Div(children=[navbar,
     html.H4(children='SPY Close values for 2017'),
     html.Div(
-        dcc.Graph(figure=fig),
-        html.Div(str(data))),
+        dcc.Graph(figure=fig))
 ])
+
+@app.callback(
+    Output("modal", "is_open"),
+    [Input("Login", "n_clicks"), Input("close", "n_clicks")],
+    [State("modal", "is_open")],
+)
+def toggle_modal(n1, n2, is_open):
+    if n1 or n2:
+        return not is_open
+    return is_open
