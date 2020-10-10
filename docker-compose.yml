@@ -22,20 +22,21 @@ services:
       - flask
     networks: 
       - prodnetwork
-    postgres:
-      environment:
-        POSTGRES_USER:  postgres
-        POSTGRES_PASSWORD: password 
-        APPLICATION_DB: production
-        POSTGRES_HOSTNAME: postgres
-      image: postgres:latest
-      networks:
-        - prodnetwork
-      ports:
-        - :5432
-      restart: always
-      volumes:
-        - ./postgres-data:/var/lib/postgresql/data
+
+  postgres:
+    environment:
+      POSTGRES_USER:  postgres
+      POSTGRES_PASSWORD: password 
+      APPLICATION_DB: production
+      POSTGRES_HOSTNAME: postgres
+    image: postgres:latest
+    networks:
+      - prodnetwork
+    ports:
+      - 5432:5432
+    restart: always
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
 
 networks: 
   prodnetwork:

@@ -16,3 +16,4 @@ sudo docker-compose -f docker-compose.yml up -d
 
 # Test/Debug
 sudo docker-compose ps
+sudo docker-compose logs
