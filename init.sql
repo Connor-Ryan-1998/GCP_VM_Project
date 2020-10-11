@@ -1,9 +1,3 @@
-DROP DATABASE IF EXISTS production;
-
-CREATE DATABASE production;
-
-\c production;
-
 -- User table
 CREATE TABLE IF NOT EXISTS users (
   userid SERIAL PRIMARY KEY,

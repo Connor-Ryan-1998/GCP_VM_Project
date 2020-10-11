@@ -1,14 +1,17 @@
 # GCP_VM_Project
 Flask application to sit on GCP VM
 
+
+//Ensure ubuntu is up to date
 sudo apt update -y;sudo apt upgrade -y
 
-sudo curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname
--s)-$(uname -m)" -o /usr/local/bin/docker-compose
+//Install Docker Compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
+sudo apt-get install docker.io docker-compose  -y
 
-sudo apt-get install docker.io -y
-sudo apt-get install docker-compose -y
+
+///Pull latest web app
 
 git clone https://github.com/Connor-Ryan-1998/GCP_VM_Project.git && cd GCP_VM_Project
 
