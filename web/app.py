@@ -7,6 +7,7 @@ import dash_html_components as html
 import dash_core_components as dcc
 import flask_sqlalchemy
 import plotly.express as px
+import psycopg2
 import dash
 import flask
 import os
@@ -22,7 +23,6 @@ yf.pdr_override()
 
 app = dash.Dash(
     server=server, external_stylesheets=external_stylesheets, url_base_pathname='/')
-
 #Favourites
 dropdown = dbc.DropdownMenu(
     label="Favourites",
@@ -159,9 +159,15 @@ def toggle_register_modal(n1, n2, is_open):
     dash.dependencies.Input('dateTimePicker', 'end_date'),
     Input("Generate", "n_clicks")])
 def generate_chart(value, start_date, end_date, n_clicks: int):
-    if n_clicks == None:
-        n_clicks = 0
     if (n_clicks > 0):
+        conn = psycopg2.connect(
+        host="postgres",
+        database="production",
+        user="postgres",
+        password="password")
+        cur = conn.cursor()
+        cur.execute('SELECT version()')
+        db_version = cur.fetchone()
         df = pdr.get_data_yahoo(value, start=start_date, end=end_date)
-        fig = px.scatter(df, x=df.index, y='Close')
+        fig = px.line(df, x=df.index, y='Close',title=db_version)
         return dcc.Graph(figure=fig)
