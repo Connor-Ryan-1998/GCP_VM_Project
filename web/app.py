@@ -164,9 +164,9 @@ def generate_chart(value, start_date, end_date, n_clicks: int):
         host="postgres",
         database="production",
         user="postgres",
-        password="password")
+        password="postgres")
         cur = conn.cursor()
-        cur.execute('SELECT version()')
+        cur.execute("SELECT * FROM information_schema.columns WHERE table_name like '%user%'")
         db_version = cur.fetchone()
         df = pdr.get_data_yahoo(value, start=start_date, end=end_date)
         fig = px.line(df, x=df.index, y='Close',title=db_version)
