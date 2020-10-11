@@ -169,5 +169,5 @@ def generate_chart(value, start_date, end_date, n_clicks: int):
         cur.execute("SELECT * FROM information_schema.columns WHERE table_name like '%user%'")
         db_version = cur.fetchone()
         df = pdr.get_data_yahoo(value, start=start_date, end=end_date)
-        fig = px.line(df, x=df.index, y='Close',title=db_version)
+        fig = px.line(df, x=df.index, y='Close',title=str(db_version))
         return dcc.Graph(figure=fig)
