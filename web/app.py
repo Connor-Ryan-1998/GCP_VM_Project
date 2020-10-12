@@ -11,6 +11,7 @@ import psycopg2
 import dash
 import flask
 import os
+import base64
 import sys
 import yfinance as yf
 from pandas_datareader import data as pdr
@@ -35,7 +36,7 @@ dropdown = dbc.DropdownMenu(
 register_email = dbc.FormGroup(
     [
         dbc.Label("Email", html_for="example-email"),
-        dbc.Input(type="email", id="example-email", placeholder="Enter email"),
+        dbc.Input(type="email", id="registerEmail", placeholder="Enter email"),
     ]
 )
 
@@ -74,7 +75,7 @@ form2 = dbc.Form([login_email, login_pw])
 #Navbar
 navbar = dbc.NavbarSimple(
     children=[
-        dbc.NavItem(dbc.NavLink("Not Logged in", href="#")),
+        dbc.NavItem(dbc.NavLink("Not Logged in", href="#", id='loggedInStatus')),
         dropdown,
         html.Div([
         dbc.Button("Register", id="Register"),
@@ -82,6 +83,7 @@ navbar = dbc.NavbarSimple(
             [
                 dbc.ModalHeader("Register"),
                 form1,
+                html.Div(children=[],id='registeredStatus'),
                 dbc.ModalFooter(children=[
                     dbc.Button("Register", color="primary",id="registerButton"),
                     dbc.Button("Close", id="close_register", className="ml-auto")]
@@ -116,12 +118,13 @@ fig = px.scatter(df, x=df.index, y='Close')
 
 #App layout
 app.layout = html.Div(children=[navbar,
-    html.H4(children='SPY Close values for 2017'),
+    html.H4(children=['SPY Close values for 2017'],id='headerTitle'),
     html.Div([dbc.Input(placeholder="Enter stock...", type="text",id="stock_ticker",style={"width" : "15%"}),
     dcc.DatePickerRange(
         id='dateTimePicker',
         min_date_allowed=date(1995, 8, 5),
         initial_visible_month=date(2017, 8, 5),
+        start_date=date(2017, 1, 1),
         end_date=date(2017, 8, 25)
     )]),
     html.Br(),
@@ -132,6 +135,7 @@ app.layout = html.Div(children=[navbar,
 
 
 #Callbacks
+##Login callbacks
 @app.callback(
     Output("Login_modal", "is_open"),
     [Input("Login", "n_clicks"), Input("close", "n_clicks")],
@@ -142,6 +146,8 @@ def toggle_login_modal(n1, n2, is_open):
         return not is_open
     return is_open
 
+
+##Register Callbacks
 @app.callback(
     Output("Register_modal", "is_open"),
     [Input("Register", "n_clicks"), Input("close_register", "n_clicks")],
@@ -153,12 +159,12 @@ def toggle_register_modal(n1, n2, is_open):
     return is_open
 
 @app.callback(
-    Output("chartmain", "children"),
-    [Input("stock_ticker", "value"),
-    dash.dependencies.Input('dateTimePicker', 'start_date'),
-    dash.dependencies.Input('dateTimePicker', 'end_date'),
-    Input("Generate", "n_clicks")])
-def generate_chart(value, start_date, end_date, n_clicks: int):
+    Output("registeredStatus", "children"),
+    [Input("registerButton", "n_clicks")],
+    [dash.dependencies.State("registerEmail", "value"),
+    dash.dependencies.State("register_pw", "value")],
+)
+def registerAccount(n_clicks,email,password):
     if (n_clicks > 0):
         conn = psycopg2.connect(
         host="postgres",
@@ -166,8 +172,23 @@ def generate_chart(value, start_date, end_date, n_clicks: int):
         user="postgres",
         password="postgres")
         cur = conn.cursor()
-        cur.execute("SELECT * FROM information_schema.columns WHERE table_name like '%user%'")
-        db_version = cur.fetchone()
+        #encrypt password
+        encryptedPassword = base64.b64encode(password.encode("utf-8"))
+        cur.execute("INSERT INTO users(username,password) VALUES({},{})".format(email,encryptedPassword))
+        return 'Registered'
+
+
+
+
+###Main chart generation
+@app.callback(
+    Output("chartmain", "children"),
+    [Input("Generate", "n_clicks")],
+    [dash.dependencies.State('dateTimePicker', 'start_date'),
+    dash.dependencies.State('dateTimePicker', 'end_date'),
+    dash.dependencies.State("stock_ticker", "value")])
+def generate_chart(n_clicks, start_date, end_date, value):
+    if (n_clicks):
         df = pdr.get_data_yahoo(value, start=start_date, end=end_date)
-        fig = px.line(df, x=df.index, y='Close',title=str(db_version))
+        fig = px.line(df, x=df.index, y='Close')
         return dcc.Graph(figure=fig)
