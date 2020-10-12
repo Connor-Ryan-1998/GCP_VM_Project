@@ -20,3 +20,8 @@ sudo docker-compose -f docker-compose.yml up -d
 # Test/Debug
 sudo docker-compose ps
 sudo docker-compose logs
+
+sudo docker exec -it gcp_vm_project_postgres_1 bash
+psql -h localhost -p 5432
+### wipe images 
+docker system prune -a
