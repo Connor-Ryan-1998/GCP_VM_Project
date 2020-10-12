@@ -8,6 +8,7 @@ sudo apt update -y;sudo apt upgrade -y
 //Install Docker Compose
 sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
+
 sudo apt-get install docker.io docker-compose  -y
 
 
@@ -22,6 +23,9 @@ sudo docker-compose ps
 sudo docker-compose logs
 
 sudo docker exec -it gcp_vm_project_postgres_1 bash
-psql -h localhost -p 5432
+psql -h localhost -p 5432 -U postgres
+\c production
 ### wipe images 
 docker system prune -a
+
+

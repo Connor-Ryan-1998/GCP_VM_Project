@@ -31,6 +31,7 @@ dropdown = dbc.DropdownMenu(
         dbc.DropdownMenuItem("ASX.AEF"),
         dbc.DropdownMenuItem("ASX.CBA"),
     ],
+    id='favouritesDropdown'
 )
 
 register_email = dbc.FormGroup(
@@ -111,7 +112,7 @@ navbar = dbc.NavbarSimple(
     dark=True,
 )
 
-#Data sets
+# #Data sets
 df = pdr.get_data_yahoo("MSFT", start="2017-01-01", end="2018-04-30")
 fig = px.scatter(df, x=df.index, y='Close')
 
@@ -146,6 +147,29 @@ def toggle_login_modal(n1, n2, is_open):
         return not is_open
     return is_open
 
+@app.callback(
+    Output("loggedInStatus", "children"),
+    Output("favouritesDropdown","children"),
+    [Input("loginButton", "n_clicks")],
+    [dash.dependencies.State("login_email", "value"),
+    dash.dependencies.State("login_pw", "value")],
+)
+def loginAccount(n_clicks,email,password):
+    favourites = []
+    if (n_clicks):
+        # conn = psycopg2.connect(
+        # host="postgres",
+        # database="production",
+        # user="postgres",
+        # password="postgres")
+        # cur = conn.cursor()
+        # #encrypt password
+        # encryptedPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
+        # cur.execute("INSERT INTO users(username,password) VALUES('{}','{}')".format(email,encryptedPassword))
+        for ticker in ['MSFT','AAPL']:
+            favourites.append(dbc.DropdownMenuItem(str(ticker)))
+
+        return 'Logged in as ' + str(email),favourites
 
 ##Register Callbacks
 @app.callback(
@@ -165,7 +189,7 @@ def toggle_register_modal(n1, n2, is_open):
     dash.dependencies.State("register_pw", "value")],
 )
 def registerAccount(n_clicks,email,password):
-    if (n_clicks > 0):
+    if (n_clicks):
         conn = psycopg2.connect(
         host="postgres",
         database="production",
@@ -173,9 +197,13 @@ def registerAccount(n_clicks,email,password):
         password="postgres")
         cur = conn.cursor()
         #encrypt password
-        encryptedPassword = base64.b64encode(password.encode("utf-8"))
-        cur.execute("INSERT INTO users(username,password) VALUES({},{})".format(email,encryptedPassword))
-        return 'Registered'
+        encryptedPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
+        try:
+            cur.execute("INSERT INTO users(username,password) VALUES('{}','{}')".format(email,encryptedPassword))
+        except Exception as e:
+            return 'Error '+ str(e)
+        else:
+            return 'Registered'
 
 
 
