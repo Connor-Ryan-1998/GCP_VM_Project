@@ -4,10 +4,10 @@
 -- User table
 CREATE TABLE IF NOT EXISTS users (
   userid SERIAL PRIMARY KEY,
-  username VARCHAR,
-  password VARCHAR,
-  dateCreated DATE,
-  UNIQUE(username)
+  username VARCHAR NOT NULL,
+  password VARCHAR NOT NULL,
+  dateCreated timestamp DEFAULT current_timestamp,
+  UNIQUE (username)
 );
 
 -- Favourites table

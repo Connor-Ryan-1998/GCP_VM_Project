@@ -166,12 +166,11 @@ def loginAccount(n_clicks,email,password):
             cur = conn.cursor()
             #encrypt LOGIN password
             encryptedLoginPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
-            cur.execute("SELECT password from users WHERE username = '{}'".format(email))
+            cur.execute("SELECT password from users WHERE username = '{}';".format(email))
             result=cur.fetchone()
-            print(result[0])
             for ticker in ['MSFT','AAPL']:
                 favourites.append(dbc.DropdownMenuItem(str(ticker)))
-            return 'Login successful, you may exit the modal', 'Logged in as ' + str(email),favourites
+            return 'Login successful ' + str(result) + ', you may exit the modal', 'Logged in as ' + str(email),favourites
     except Exception as e:
         return 'Error: ' + str(e)
 
@@ -205,7 +204,7 @@ def registerAccount(n_clicks,email,password):
             encryptedPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
             currentDateTime = datetime.now()
             cur.execute("INSERT INTO users(username,password,dateCreated) VALUES('{}','{}','{}');".format(email,encryptedPassword,str(currentDateTime)))
-            cur.execute("SELECT * FROM users;")
+            cur.execute("SELECT {} FROM users;".format(email))
             result = cur.fetchone()
             return 'Registered: ' + str(result)
     except Exception as e:
