@@ -1,8 +1,10 @@
+DROP DATABASE IF EXISTS production
 
+CREATE DATABASE production
 \c production
 
 -- User table
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS [production].[public].users (
   userid SERIAL PRIMARY KEY,
   username VARCHAR NOT NULL,
   password VARCHAR NOT NULL,
@@ -11,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Favourites table
-CREATE TABLE IF NOT EXISTS userFavourites (
+CREATE TABLE IF NOT EXISTS [production].[public].userFavourites (
   id SERIAL PRIMARY KEY,
   userId INTEGER REFERENCES users(userid),
   ticker VARCHAR,
