@@ -1,7 +1,7 @@
 # Module Imports
 from flask import Flask, session, copy_current_request_context, request, Flask, jsonify, make_response, redirect
 from dash.dependencies import Input, Output, State
-from datetime import date
+from datetime import date,datetime
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 import dash_core_components as dcc
@@ -27,10 +27,7 @@ app = dash.Dash(
 #Favourites
 dropdown = dbc.DropdownMenu(
     label="Favourites",
-    children=[
-        dbc.DropdownMenuItem("ASX.AEF"),
-        dbc.DropdownMenuItem("ASX.CBA"),
-    ],
+    children=[],
     id='favouritesDropdown'
 )
 
@@ -73,6 +70,7 @@ login_pw = dbc.FormGroup(
 
 form1 = dbc.Form([register_email, register_pw])
 form2 = dbc.Form([login_email, login_pw])
+
 #Navbar
 navbar = dbc.NavbarSimple(
     children=[
@@ -98,6 +96,7 @@ navbar = dbc.NavbarSimple(
             [
                 dbc.ModalHeader("Login"),
                 form2,
+                html.Div(children=[],id='loggedInStatusSuccess'),
                 dbc.ModalFooter(children=[
                     dbc.Button("Login", color="primary", id="loginButton"),
                     dbc.Button("Close", id="close", className="ml-auto")]
@@ -148,6 +147,7 @@ def toggle_login_modal(n1, n2, is_open):
     return is_open
 
 @app.callback(
+    Output("loggedInStatusSuccess"), "children"),
     Output("loggedInStatus", "children"),
     Output("favouritesDropdown","children"),
     [Input("loginButton", "n_clicks")],
@@ -157,19 +157,23 @@ def toggle_login_modal(n1, n2, is_open):
 def loginAccount(n_clicks,email,password):
     favourites = []
     if (n_clicks):
-        # conn = psycopg2.connect(
-        # host="postgres",
-        # database="production",
-        # user="postgres",
-        # password="postgres")
-        # cur = conn.cursor()
-        # #encrypt password
-        # encryptedPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
-        # cur.execute("INSERT INTO users(username,password) VALUES('{}','{}')".format(email,encryptedPassword))
-        for ticker in ['MSFT','AAPL']:
-            favourites.append(dbc.DropdownMenuItem(str(ticker)))
-
-        return 'Logged in as ' + str(email),favourites
+        conn = psycopg2.connect(
+        host="postgres",
+        database="production",
+        user="postgres",
+        password="postgres")
+        cur = conn.cursor()
+        #encrypt LOGIN password
+        encryptedLoginPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
+        try:
+            cur.execute("SELECT password from users WHERE username = '{}'".format(email)))
+            result=cur.fetchone()
+            print(result[0])
+            for ticker in ['MSFT','AAPL']:
+                favourites.append(dbc.DropdownMenuItem(str(ticker)))
+            return 'Login successful, you may exit the modal'. 'Logged in as ' + str(email),favourites
+        except Exception as e:
+            return 'Error: ' + str(e)
 
 ##Register Callbacks
 @app.callback(
@@ -198,12 +202,12 @@ def registerAccount(n_clicks,email,password):
         cur = conn.cursor()
         #encrypt password
         encryptedPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
+        currentDateTime = datetime.now()
         try:
-            cur.execute("INSERT INTO users(username,password) VALUES('{}','{}')".format(email,encryptedPassword))
-        except Exception as e:
-            return 'Error '+ str(e)
-        else:
+            cur.execute("INSERT INTO users(username,password,dateCreated) VALUES('{}','{}','{}')".format(email,encryptedPassword,currentDateTime))
             return 'Registered'
+        except Exception as e:
+            return 'Error: '+ str(e)
 
 
 
