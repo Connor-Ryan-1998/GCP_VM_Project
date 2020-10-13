@@ -1,9 +1,18 @@
-DROP DATABASE IF EXISTS production;
 
-CREATE DATABASE production;
+SELECT 'CREATE DATABASE production'
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'production')\gexec
+
 \c production;
 
-CREATE USER postgres WITH password postgres;
+BEGIN
+   IF NOT EXISTS (
+      SELECT FROM pg_catalog.pg_roles  -- SELECT list can be empty for this
+      WHERE  rolname = 'postgres') THEN
+
+      CREATE ROLE my_user WITH PASSWORD postgres;
+   END IF;
+END
+
 GRANT ALL PRIVILEGES ON DATABASE production TO postgres;
 
 -- User table
