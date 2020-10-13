@@ -147,7 +147,7 @@ def toggle_login_modal(n1, n2, is_open):
     return is_open
 
 @app.callback(
-    Output("loggedInStatusSuccess"), "children"),
+    Output("loggedInStatusSuccess", "children"),
     Output("loggedInStatus", "children"),
     Output("favouritesDropdown","children"),
     [Input("loginButton", "n_clicks")],
@@ -166,12 +166,12 @@ def loginAccount(n_clicks,email,password):
         #encrypt LOGIN password
         encryptedLoginPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
         try:
-            cur.execute("SELECT password from users WHERE username = '{}'".format(email)))
+            cur.execute("SELECT password from users WHERE username = '{}'".format(email))
             result=cur.fetchone()
             print(result[0])
             for ticker in ['MSFT','AAPL']:
                 favourites.append(dbc.DropdownMenuItem(str(ticker)))
-            return 'Login successful, you may exit the modal'. 'Logged in as ' + str(email),favourites
+            return 'Login successful, you may exit the modal', 'Logged in as ' + str(email),favourites
         except Exception as e:
             return 'Error: ' + str(e)
 
