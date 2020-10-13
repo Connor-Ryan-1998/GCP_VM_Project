@@ -6,9 +6,9 @@ from config import *
 
 try:
     conn = psycopg2.connect(
-                        host="postgres1",
+                        host="postgres",
                         database="production",
-                        user="postgres",
+                        user="postgres1",
                         password="secret123")
     cur = conn.cursor()
 except Exception as e:

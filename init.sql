@@ -14,6 +14,6 @@ CREATE TABLE IF NOT EXISTS userFavourites (
   id SERIAL PRIMARY KEY,
   userId INTEGER REFERENCES users(userid),
   ticker VARCHAR,
-  dateAdded timestamp DEFAULT current_timestamp
+  dateAdded timestamp DEFAULT current_timestamp,
   UNIQUE (userId,ticker)
 );
