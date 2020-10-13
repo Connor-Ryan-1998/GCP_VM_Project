@@ -39,13 +39,13 @@ def loginAccount(n_clicks,email,password):
             cur.execute("SELECT password from public.users WHERE username = '{}';".format(email))
             result=cur.fetchone()
             if result == encryptedLoginPassword:
-                favourites == []
+                favourites = []
                 session['username'] = email
                 cur.execute("SELECT ticker from public.userFavourites uF inner join users u on u.userId = uF.userId WHERE u.username = '{}';".format(session['username']))
                 result = cur.fetchall()
                 for ticker in result:
                     favourites.append(str(ticker))
-                if favourites = []:
+                if favourites == []:
                     favourites =  ['SPY']
                 print(favourites)
                 return 'Login successful ' + str(session['username']) + ', you may exit the modal', 'Logged in as ' + str(email),[{'key': i, 'value': i} for i in favourites]
