@@ -156,7 +156,7 @@ def toggle_login_modal(n1, n2, is_open):
 )
 def loginAccount(n_clicks,email,password):
     favourites = []
-    if (n_clicks > 0)
+    if (n_clicks > 0):
         conn = psycopg2.connect(
         host="postgres",
         database="production",
@@ -193,21 +193,21 @@ def toggle_register_modal(n1, n2, is_open):
     dash.dependencies.State("register_pw", "value")],
 )
 def registerAccount(n_clicks,email,password):
-    if (n_clicks > 0):
-        conn = psycopg2.connect(
-        host="postgres",
-        database="production",
-        user="postgres",
-        password="postgres")
-        cur = conn.cursor()
-        #encrypt password
-        encryptedPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
-        currentDateTime = datetime.now()
-        try:
-            cur.execute("INSERT INTO users(username,password,dateCreated) VALUES('{}','{}','{}')".format(email,encryptedPassword,currentDateTime))
+    try:
+        if (n_clicks > 0):
+            conn = psycopg2.connect(
+            host="postgres",
+            database="production",
+            user="postgres",
+            password="postgres")
+            cur = conn.cursor()
+            #encrypt password
+            encryptedPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
+            currentDateTime = datetime.now()
+            cur.execute("INSERT INTO users(username,password,dateCreated) VALUES('{}','{}','{}')".format(email,encryptedPassword,str(currentDateTime)))
             return 'Registered'
-        except Exception as e:
-            return 'Error: '+ str(e)
+    except Exception as e:
+        return 'Error: '+ str(e)
 
 
 
