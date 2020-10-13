@@ -50,10 +50,10 @@ def loginAccount(n_clicks,email,password):
                     favourites.append(str(ticker[0]))
                 if favourites == None:
                     favourites =  ['SPY']
-                return 'Login successful ' + str(session['username']) + ', you may exit the modal', 'Logged in as ' + str(email),[{'key': str(i), 'value': str(i)} for i in favourites]
+                return 'Login successful ' + str(session['username']) + ', you may exit the modal', 'Logged in as ' + str(email),[{'label': str(i), 'value': str(i)} for i in favourites]
             else:
                 cur.execute("rollback;")
-                return 'Authentication failed: Please check username/password','Login failed (please try again)', [{'key': 'SPY', 'value': 'SPY'}]
+                return 'Authentication failed: Please check username/password','Login failed (please try again)', [{'label': 'SPY', 'value': 'SPY'}]
     except Exception as e:
         cur.execute("rollback;")
         return 'Error: ' + str(e),'Login failed (please try again)', [{'key': 'SPY', 'value': 'SPY'}]
