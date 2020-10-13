@@ -1,6 +1,6 @@
--- DROP DATABASE IF EXISTS production;
+DROP DATABASE IF EXISTS production;
 
--- CREATE DATABASE production;
+CREATE DATABASE production;
 \c production;
 
 CREATE postgres WITH password postgres;
