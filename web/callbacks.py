@@ -36,7 +36,8 @@ def loginAccount(n_clicks,email,password):
             cur = conn.cursor()
             #encrypt LOGIN password
             encryptedLoginPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
-            cur.execute("SELECT password from users WHERE username = '{}';".format(email))
+            #cur.execute("SELECT password from users WHERE username = '{}';".format(email))
+            cur.execute("SELECT password from users")
             result=cur.fetchone()
             print(result, encryptedLoginPassword)
             if result == encryptedLoginPassword:
@@ -48,7 +49,7 @@ def loginAccount(n_clicks,email,password):
                     favourites.append(str(ticker))
                 return 'Login successful ' + str(result) + 'g, you may exit the modal', 'Logged in as ' + str(email),[{'key': i, 'value': i} for i in favourites]
             else:
-                return 'Authentication failed: Please check username/password'
+                return 'Authentication failed: Please check username/password','Not Logged in (please retry)', [{'key': 'SPY', 'value': 'SPY'}]
     except Exception as e:
         return 'Error: ' + str(e)
 
