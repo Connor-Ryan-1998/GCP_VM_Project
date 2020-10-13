@@ -37,10 +37,8 @@ def loginAccount(n_clicks,email,password):
             cur = conn.cursor()
             #encrypt LOGIN password
             encryptedLoginPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
-            #cur.execute("SELECT password from users WHERE username = '{}';".format(email))
-            cur.execute("SELECT * from public.users")
-            result=cur.fetchall()
-            print(result, encryptedLoginPassword)
+            cur.execute("SELECT password from public.users WHERE username = '{}';".format(email))
+            result=cur.fetchone()
             if result == encryptedLoginPassword:
                 session['username'] = email
                 cur.execute("SELECT ticker from public.userFavourites uF inner join users u on u.userId = uF.userId \
