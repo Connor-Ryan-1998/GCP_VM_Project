@@ -1,28 +1,27 @@
-# config.py
-
-
+from flask import Flask, session, copy_current_request_context, request, Flask, jsonify, make_response, redirect
+from datetime import date,datetime,timedelta
+import dash_html_components as html
+from dash.dependencies import Input, Output, State
+from pandas_datareader import data as pdr
+import plotly.express as px
+import dash_core_components as dcc
+import dash_core_components as dcc
+import flask_sqlalchemy
+import psycopg2
+from callbacks import *
+import base64
+import sys
+import dash_bootstrap_components as dbc
+import flask
 import os
+import yfinance as yf
+import dash
 
+external_stylesheets = [dbc.themes.BOOTSTRAP]
 
-class BaseConfig(object):
-    SECRET_KEY = os.environ['SECRET_KEY']
-    DEBUG = os.environ['DEBUG']
-    DB_NAME = os.environ['DB_NAME']
-    DB_USER = os.environ['DB_USER']
-    DB_PASS = os.environ['DB_PASS']
-    DB_SERVICE = os.environ['DB_SERVICE']
-    DB_PORT = os.environ['DB_PORT']
-    SQLALCHEMY_DATABASE_URI = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(
-        DB_USER, DB_PASS, DB_SERVICE, DB_PORT, DB_NAME
-    )
+server = flask.Flask(__name__)
+server.config['SECRET_KEY'] = os.urandom(24)
+yf.pdr_override()
 
-
-# class BaseConfig(object):
-#     SECRET_KEY = 'hi'
-#     DEBUG = True
-#     DB_NAME = 'postgres'
-#     DB_SERVICE = 'localhost'
-#     DB_PORT = 5432
-#     SQLALCHEMY_DATABASE_URI = 'postgresql://{0}:{1}/{2}'.format(
-#         DB_SERVICE, DB_PORT, DB_NAME
-#     )
+app = dash.Dash(
+    server=server, external_stylesheets=external_stylesheets, url_base_pathname='/')
