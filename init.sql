@@ -3,7 +3,7 @@ DROP DATABASE IF EXISTS production;
 CREATE DATABASE production;
 \c production;
 
-CREATE postgres WITH password postgres;
+CREATE USER postgres WITH password postgres;
 GRANT ALL PRIVILEGES ON DATABASE production TO postgres;
 
 -- User table
