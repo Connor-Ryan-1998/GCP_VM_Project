@@ -30,7 +30,7 @@ from callbacks import *
 dropdown = dcc.Dropdown(
     placeholder="Favourites",
     id='favouritesDropdown',
-    value='SPY',
+    value='',
     options=[
             {'label':'SPY', 'value' : 'SPY'}
             ],

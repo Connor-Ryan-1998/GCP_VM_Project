@@ -3,6 +3,8 @@ from datetime import date,datetime,timedelta
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 from pandas_datareader import data as pdr
+import pandas as pd
+import dash_table
 import plotly.express as px
 import dash_core_components as dcc
 import dash_core_components as dcc

@@ -13,6 +13,7 @@ try:
     cur = conn.cursor()
 except Exception as e:
     print('Not Connected: ' +str(e))
+    pass
 #Callbacks
 ##Login callbacks
 @app.callback(
@@ -120,11 +121,61 @@ def addChartToFavourites(n_clicks, value):
 def generate_chartFromFavourites(value,start_date,end_date):
     try:
         if not value:
-            return 'Invalid Favourite', 'Invalid Favourite Fundamental'
+            return '', ''
         else:
             df = pdr.get_data_yahoo(value, start=start_date, end=end_date)
             fig = px.line(df, x=df.index, y='Close')
-            return dcc.Graph(figure=fig), 'Fundamentals of stonk'
+            df = pd.DataFrame.from_dict([yf.Ticker(value).info])
+            del df['longBusinessSummary']
+            data = df.to_dict('rows')
+            columns =  [{"name": i, "id": i,} for i in (df.columns)]
+            return dcc.Graph(figure=fig), [dash_table.DataTable(id='fundamentalsTable',
+                                                                data=data, columns=columns,
+                                                                editable=False,
+                                                                sort_action="native",
+                                                                sort_mode="multi",
+                                                                row_selectable="multi",
+                                                                style_table={
+                                                                    'maxHeight': '50ex',
+                                                                    'overflowY': 'scroll',
+                                                                    'width': '100%',
+                                                                    'minWidth': '100%',
+                                                                },
+                                                                # style cell
+                                                                style_cell={
+                                                                    'fontFamily': 'Open Sans',
+                                                                    'textAlign': 'center',
+                                                                    'height': '60px',
+                                                                    'padding': '2px 22px',
+                                                                    'whiteSpace': 'inherit',
+                                                                    'overflow': 'hidden',
+                                                                    'textOverflow': 'ellipsis',
+                                                                },
+                                                                style_cell_conditional=[
+                                                                    {
+                                                                        'if': {'column_id': 'State'},
+                                                                        'textAlign': 'left'
+                                                                    },
+                                                                ],
+                                                                style_header={
+                                                                    'fontWeight': 'bold',
+                                                                    'backgroundColor': 'white',
+                                                                },
+                                                                style_data_conditional=[
+                                                                    {
+                                                                        # stripped rows
+                                                                        'if': {'row_index': 'odd'},
+                                                                        'backgroundColor': 'rgb(248, 248, 248)'
+                                                                    },
+                                                                    {
+                                                                        # highlight one row
+                                                                        'if': {'row_index': 4},
+                                                                        "backgroundColor": "#3D9970",
+                                                                        'color': 'white'
+                                                                    }
+                                                                ]
+                )
+            ]
     except Exception as e:
         return 'Error: '+ str(e), 'Invalid Favourite Fundamental'
 
@@ -141,7 +192,57 @@ def generate_chart(n_clicks, start_date, end_date, value):
         try:
             df = pdr.get_data_yahoo(value, start=start_date, end=end_date)
             fig = px.line(df, x=df.index, y='Close')
-            return dcc.Graph(figure=fig), 'Fundamentals of stonk'
+            df = pd.DataFrame.from_dict([yf.Ticker(value).info])
+            del df['longBusinessSummary']
+            data = df.to_dict('rows')
+            columns =  [{"name": i, "id": i,} for i in (df.columns)]
+            return dcc.Graph(figure=fig), [dash_table.DataTable(id='fundamentalsTable',
+                                                                data=data, columns=columns,
+                                                                editable=False,
+                                                                sort_action="native",
+                                                                sort_mode="multi",
+                                                                row_selectable="multi",
+                                                                style_table={
+                                                                    'maxHeight': '50ex',
+                                                                    'overflowY': 'scroll',
+                                                                    'width': '100%',
+                                                                    'minWidth': '100%',
+                                                                },
+                                                                # style cell
+                                                                style_cell={
+                                                                    'fontFamily': 'Open Sans',
+                                                                    'textAlign': 'center',
+                                                                    'height': '60px',
+                                                                    'padding': '2px 22px',
+                                                                    'whiteSpace': 'inherit',
+                                                                    'overflow': 'hidden',
+                                                                    'textOverflow': 'ellipsis',
+                                                                },
+                                                                style_cell_conditional=[
+                                                                    {
+                                                                        'if': {'column_id': 'State'},
+                                                                        'textAlign': 'left'
+                                                                    },
+                                                                ],
+                                                                style_header={
+                                                                    'fontWeight': 'bold',
+                                                                    'backgroundColor': 'white',
+                                                                },
+                                                                style_data_conditional=[
+                                                                    {
+                                                                        # stripped rows
+                                                                        'if': {'row_index': 'odd'},
+                                                                        'backgroundColor': 'rgb(248, 248, 248)'
+                                                                    },
+                                                                    {
+                                                                        # highlight one row
+                                                                        'if': {'row_index': 4},
+                                                                        "backgroundColor": "#3D9970",
+                                                                        'color': 'white'
+                                                                    }
+                                                                ]
+                )
+            ]
         except Exception as e:
             return 'Error: '+ str(e), 'No Fundamentals'
 
