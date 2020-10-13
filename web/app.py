@@ -156,24 +156,24 @@ def toggle_login_modal(n1, n2, is_open):
 )
 def loginAccount(n_clicks,email,password):
     favourites = []
-    if (n_clicks > 0):
-        conn = psycopg2.connect(
-        host="postgres",
-        database="production",
-        user="postgres",
-        password="postgres")
-        cur = conn.cursor()
-        #encrypt LOGIN password
-        encryptedLoginPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
-        try:
+    try:
+        if (n_clicks):
+            conn = psycopg2.connect(
+            host="postgres",
+            database="production",
+            user="postgres",
+            password="postgres")
+            cur = conn.cursor()
+            #encrypt LOGIN password
+            encryptedLoginPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
             cur.execute("SELECT password from users WHERE username = '{}'".format(email))
             result=cur.fetchone()
             print(result[0])
             for ticker in ['MSFT','AAPL']:
                 favourites.append(dbc.DropdownMenuItem(str(ticker)))
             return 'Login successful, you may exit the modal', 'Logged in as ' + str(email),favourites
-        except Exception as e:
-            return 'Error: ' + str(e)
+    except Exception as e:
+        return 'Error: ' + str(e)
 
 ##Register Callbacks
 @app.callback(
@@ -194,7 +194,7 @@ def toggle_register_modal(n1, n2, is_open):
 )
 def registerAccount(n_clicks,email,password):
     try:
-        if (n_clicks > 0):
+        if (n_clicks):
             conn = psycopg2.connect(
             host="postgres",
             database="production",
@@ -204,8 +204,10 @@ def registerAccount(n_clicks,email,password):
             #encrypt password
             encryptedPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
             currentDateTime = datetime.now()
-            cur.execute("INSERT INTO users(username,password,dateCreated) VALUES('{}','{}','{}')".format(email,encryptedPassword,str(currentDateTime)))
-            return 'Registered'
+            #cur.execute("INSERT INTO production.users(username,password) VALUES('{}','{}','{}')".format(email,encryptedPassword,str(currentDateTime)))
+            cur.execute("INSERT INTO production.users(username,password) VALUES('{}','{}')".format(email,encryptedPassword)
+            result=cur.fetchone()
+            return 'Registered: ' + str(result)
     except Exception as e:
         return 'Error: '+ str(e)
 
