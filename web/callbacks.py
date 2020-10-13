@@ -37,8 +37,8 @@ def loginAccount(n_clicks,email,password):
             #encrypt LOGIN password
             encryptedLoginPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
             #cur.execute("SELECT password from users WHERE username = '{}';".format(email))
-            cur.execute("SELECT password from users")
-            result=cur.fetchone()
+            cur.execute("SELECT * from users")
+            result=cur.fetchall()
             print(result, encryptedLoginPassword)
             if result == encryptedLoginPassword:
                 session['username'] = email
