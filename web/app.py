@@ -204,8 +204,9 @@ def registerAccount(n_clicks,email,password):
             #encrypt password
             encryptedPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
             currentDateTime = datetime.now()
-            #cur.execute("INSERT INTO production.users(username,password) VALUES('{}','{}','{}')".format(email,encryptedPassword,str(currentDateTime)))
-            cur.execute("INSERT INTO production.users(username,password) VALUES('{}','{}')".format(email,encryptedPassword))
+            #cur.execute("INSERT INTO users(username,password) VALUES('{}','{}','{}')".format(email,encryptedPassword,str(currentDateTime)))
+            cur.execute("INSERT INTO users(username,password) VALUES('{}','{}');".format(email,encryptedPassword))
+            cur.execute("SELECT * FROM users;")
             result = cur.fetchone()
             return 'Registered: ' + str(result)
     except Exception as e:
