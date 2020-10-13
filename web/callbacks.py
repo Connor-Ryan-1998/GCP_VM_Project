@@ -38,6 +38,7 @@ def loginAccount(n_clicks,email,password):
             encryptedLoginPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
             cur.execute("SELECT password from users WHERE username = '{}';".format(email))
             result=cur.fetchone()
+            print(result, encryptedLoginPassword)
             if result == encryptedLoginPassword:
                 session['username'] = email
                 cur.execute("SELECT ticker from userFavourites uF inner join users u on u.userId = uF.userId \
