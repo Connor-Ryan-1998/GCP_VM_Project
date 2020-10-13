@@ -37,12 +37,12 @@ def loginAccount(n_clicks,email,password):
             #encrypt LOGIN password
             encryptedLoginPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
             #cur.execute("SELECT password from users WHERE username = '{}';".format(email))
-            cur.execute("SELECT * from users")
+            cur.execute("SELECT * from public.users")
             result=cur.fetchall()
             print(result, encryptedLoginPassword)
             if result == encryptedLoginPassword:
                 session['username'] = email
-                cur.execute("SELECT ticker from userFavourites uF inner join users u on u.userId = uF.userId \
+                cur.execute("SELECT ticker from public.userFavourites uF inner join users u on u.userId = uF.userId \
                              WHERE u.username = '{}';".format(session['username']))
                 result = cur.fetchall()
                 for ticker in result:
@@ -82,8 +82,8 @@ def registerAccount(n_clicks,email,password):
             #encrypt password
             encryptedPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
             currentDateTime = datetime.now()
-            cur.execute("INSERT INTO users(username,password,dateCreated) VALUES('{}','{}','{}');".format(email,encryptedPassword,str(currentDateTime)))
-            cur.execute("SELECT username FROM users WHERE username = '{}' ;".format(email))
+            cur.execute("INSERT INTO public.users(username,password,dateCreated) VALUES('{}','{}','{}');".format(email,encryptedPassword,str(currentDateTime)))
+            cur.execute("SELECT username FROM public.users WHERE username = '{}' ;".format(email))
             result = cur.fetchone()
             return 'Registered: ' + str(result)
     except Exception as e:
@@ -105,9 +105,9 @@ def addChartToFavourites(n_clicks, value):
                     user="postgres",
                     password="postgres")
                     cur = conn.cursor()
-                    cur.execute("SELECT userId FROM users WHERE username = '{}' ;".format(session['username']))
+                    cur.execute("SELECT userId FROM public.users WHERE username = '{}' ;".format(session['username']))
                     result = cur.fetchone()
-                    cur.execute("INSERT INTO userFavourites(userId,ticker) VALUES('{}','{}');".format(result,str(value)))
+                    cur.execute("INSERT INTO public.userFavourites(userId,ticker) VALUES('{}','{}');".format(result,str(value)))
                     return 'Added {} to your favourites'.format(value)
                 except Exception as e:
                     return 'Error: '+ str(e)
