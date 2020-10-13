@@ -16,7 +16,7 @@ sudo apt-get install docker.io docker-compose  -y
 
 git clone https://github.com/Connor-Ryan-1998/GCP_VM_Project.git && cd GCP_VM_Project
 
-sudo docker-compose -f docker-compose.yml up -d 
+sudo docker-compose build $(sudo docker-compose -f docker-compose.yml up -d)
 
 # Test/Debug
 sudo docker-compose ps
