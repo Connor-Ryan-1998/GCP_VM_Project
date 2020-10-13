@@ -29,6 +29,6 @@ sudo docker exec -it gcp_vm_project_postgres_1 bash
 psql -h localhost -p 5432 -U postgres1 -d production
  
 ### wipe images 
-sudo docker system prune -a
+sudo docker system prune -a 
 
 

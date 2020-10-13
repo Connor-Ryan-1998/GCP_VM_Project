@@ -103,7 +103,7 @@ def addChartToFavourites(n_clicks, value):
                 try:
                     cur.execute("SELECT userId FROM public.users WHERE username = '{}' ;".format(session['username']))
                     result = cur.fetchone()
-                    cur.execute("INSERT INTO public.userFavourites(userId,ticker) VALUES('{}','{}');".format(result,str(value)))
+                    cur.execute("INSERT INTO public.userFavourites(userId,ticker) VALUES({},'{}');".format(result,str(value)))
                     return 'Added {} to your favourites'.format(value)
                 except Exception as e:
                     return 'Error: '+ str(e)
