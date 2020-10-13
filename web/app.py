@@ -170,7 +170,7 @@ def loginAccount(n_clicks,email,password):
             result=cur.fetchone()
             for ticker in ['MSFT','AAPL']:
                 favourites.append(dbc.DropdownMenuItem(str(ticker)))
-            return 'Login successful ' + str(result) + ', you may exit the modal', 'Logged in as ' + str(email),favourites
+            return 'Login successful ' + str(result) + 'g, you may exit the modal', 'Logged in as ' + str(email),favourites
     except Exception as e:
         return 'Error: ' + str(e)
 
