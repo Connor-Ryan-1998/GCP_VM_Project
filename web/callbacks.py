@@ -6,10 +6,10 @@ from config import *
 
 try:
     conn = psycopg2.connect(
-                        host="postgres",
+                        host="postgres1",
                         database="production",
                         user="postgres",
-                        password="postgres")
+                        password="secret123")
     cur = conn.cursor()
 except Exception as e:
     print('Not Connected: ' +str(e))
