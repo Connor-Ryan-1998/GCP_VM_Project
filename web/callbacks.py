@@ -4,6 +4,12 @@ from config import *
 # import plotly.express as px
 # import dash_core_components as dcc
 
+conn = psycopg2.connect(
+                    host="postgres",
+                    database="production",
+                    user="postgres",
+                    password="postgres")
+cur = conn.cursor()
 #Callbacks
 ##Login callbacks
 @app.callback(
@@ -28,11 +34,6 @@ def loginAccount(n_clicks,email,password):
     favourites = []
     try:
         if (n_clicks):
-            conn = psycopg2.connect(
-            host="postgres",
-            database="production",
-            user="postgres",
-            password="postgres")
             cur = conn.cursor()
             #encrypt LOGIN password
             encryptedLoginPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
@@ -73,12 +74,6 @@ def toggle_register_modal(n1, n2, is_open):
 def registerAccount(n_clicks,email,password):
     try:
         if (n_clicks):
-            conn = psycopg2.connect(
-            host="postgres",
-            database="production",
-            user="postgres",
-            password="postgres")
-            cur = conn.cursor()
             #encrypt password
             encryptedPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
             currentDateTime = datetime.now()
@@ -99,12 +94,6 @@ def addChartToFavourites(n_clicks, value):
         try:
             if session.get('username') is not None:
                 try:
-                    conn = psycopg2.connect(
-                    host="postgres",
-                    database="production",
-                    user="postgres",
-                    password="postgres")
-                    cur = conn.cursor()
                     cur.execute("SELECT userId FROM public.users WHERE username = '{}' ;".format(session['username']))
                     result = cur.fetchone()
                     cur.execute("INSERT INTO public.userFavourites(userId,ticker) VALUES('{}','{}');".format(result,str(value)))
