@@ -19,6 +19,8 @@ git clone https://github.com/Connor-Ryan-1998/GCP_VM_Project.git && cd GCP_VM_Pr
 sudo docker-compose build
 sudo docker-compose -f docker-compose.yml up -d 
  
+
+# Dont forget to remove existing db 
 # Test/Debug
 sudo docker-compose ps
 sudo docker-compose logs
@@ -27,6 +29,6 @@ sudo docker exec -it gcp_vm_project_postgres_1 bash
 psql -h localhost -p 5432 -U postgres -d production
  
 ### wipe images 
-docker system prune -a
+sudo docker system prune -a
 
 
