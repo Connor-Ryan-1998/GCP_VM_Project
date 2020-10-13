@@ -48,11 +48,11 @@ def loginAccount(n_clicks,email,password):
                 cur.execute("SELECT ticker from public.userFavourites uF inner join users u on u.userId = uF.userId WHERE u.username = '{}';".format(session['username']))
                 result = cur.fetchall()
                 for ticker in result:
-                    favourites.append(str(ticker))
+                    favourites.append(str(ticker[0]))
                 if favourites == None:
                     favourites =  ['SPY']
                 print(favourites)
-                return 'Login successful ' + str(session['username']) + ', you may exit the modal', 'Logged in as ' + str(email),[{'key': i, 'value': i} for i in favourites]
+                return 'Login successful ' + str(session['username']) + ', you may exit the modal', 'Logged in as ' + str(email),[{'key': str(i), 'value': i} for i in favourites]
             else:
                 cur.execute("rollback;")
                 return 'Authentication failed: Please check username/password','Login failed (please try again)', [{'key': 'SPY', 'value': 'SPY'}]
