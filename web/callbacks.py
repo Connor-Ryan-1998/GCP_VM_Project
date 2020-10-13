@@ -4,12 +4,15 @@ from config import *
 # import plotly.express as px
 # import dash_core_components as dcc
 
-conn = psycopg2.connect(
-                    host="postgres",
-                    database="production",
-                    user="postgres",
-                    password="postgres")
-cur = conn.cursor()
+try:
+    conn = psycopg2.connect(
+                        host="postgres",
+                        database="production",
+                        user="postgres",
+                        password="postgres")
+    cur = conn.cursor()
+except Exception as e:
+    print('Not Connected: ' +str(e))
 #Callbacks
 ##Login callbacks
 @app.callback(
