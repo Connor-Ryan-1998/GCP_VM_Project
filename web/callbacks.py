@@ -31,7 +31,6 @@ def toggle_login_modal(n1, n2, is_open):
     dash.dependencies.State("login_pw", "value")],
 )
 def loginAccount(n_clicks,email,password):
-    favourites = []
     try:
         if (n_clicks):
             cur = conn.cursor()
@@ -40,15 +39,18 @@ def loginAccount(n_clicks,email,password):
             cur.execute("SELECT password from public.users WHERE username = '{}';".format(email))
             result=cur.fetchone()
             if result == encryptedLoginPassword:
+                favourites = []
                 session['username'] = email
-                cur.execute("SELECT ticker from public.userFavourites uF inner join users u on u.userId = uF.userId \
-                             WHERE u.username = '{}';".format(session['username']))
+                cur.execute("SELECT ticker from public.userFavourites uF inner join users u on u.userId = uF.userId WHERE u.username = '{}';".format(session['username']))
                 result = cur.fetchall()
                 for ticker in result:
                     favourites.append(str(ticker))
-                return 'Login successful ' + str(result) + 'g, you may exit the modal', 'Logged in as ' + str(email),[{'key': i, 'value': i} for i in favourites]
+                if favourites = []:
+                    favourites =  ['SPY']
+                print(favourites)
+                return 'Login successful ' + str(session['username']) + ', you may exit the modal', 'Logged in as ' + str(email),[{'key': i, 'value': i} for i in favourites]
             else:
-                return 'Authentication failed: Please check username/password','Not Logged in (please retry)', [{'key': 'SPY', 'value': 'SPY'}]
+                return 'Authentication failed: Please check username/password','Login failed (please try again)', [{'key': 'SPY', 'value': 'SPY'}]
     except Exception as e:
         return 'Error: ' + str(e)
 
