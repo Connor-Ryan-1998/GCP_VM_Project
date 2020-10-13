@@ -39,7 +39,7 @@ def loginAccount(n_clicks,email,password):
             cur.execute("SELECT password from public.users WHERE username = '{}';".format(email))
             result=cur.fetchone()
             if result == encryptedLoginPassword:
-                favourites = []
+                favourites == []
                 session['username'] = email
                 cur.execute("SELECT ticker from public.userFavourites uF inner join users u on u.userId = uF.userId WHERE u.username = '{}';".format(session['username']))
                 result = cur.fetchall()
@@ -50,9 +50,11 @@ def loginAccount(n_clicks,email,password):
                 print(favourites)
                 return 'Login successful ' + str(session['username']) + ', you may exit the modal', 'Logged in as ' + str(email),[{'key': i, 'value': i} for i in favourites]
             else:
+                cur.execute("rollback;")
                 return 'Authentication failed: Please check username/password','Login failed (please try again)', [{'key': 'SPY', 'value': 'SPY'}]
     except Exception as e:
-        return 'Error: ' + str(e)
+        cur.execute("rollback;")
+        return 'Error: ' + str(e),'Login failed (please try again)', [{'key': 'SPY', 'value': 'SPY'}]
 
 ##Register Callbacks
 @app.callback(
@@ -82,6 +84,7 @@ def registerAccount(n_clicks,email,password):
             result = cur.fetchone()
             return 'Registered: ' + str(result)
     except Exception as e:
+        cur.execute("rollback;")
         return 'Error: '+ str(e)
 
 #Add to favourites
