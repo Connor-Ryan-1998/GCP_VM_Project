@@ -156,7 +156,7 @@ def toggle_login_modal(n1, n2, is_open):
 )
 def loginAccount(n_clicks,email,password):
     favourites = []
-    if (n_clicks):
+    if (n_clicks > 0)
         conn = psycopg2.connect(
         host="postgres",
         database="production",
@@ -193,7 +193,7 @@ def toggle_register_modal(n1, n2, is_open):
     dash.dependencies.State("register_pw", "value")],
 )
 def registerAccount(n_clicks,email,password):
-    if (n_clicks):
+    if (n_clicks > 0):
         conn = psycopg2.connect(
         host="postgres",
         database="production",
