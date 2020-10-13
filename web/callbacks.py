@@ -38,6 +38,7 @@ def loginAccount(n_clicks,email,password):
             encryptedLoginPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
             cur.execute("SELECT password from public.users WHERE username = '{}';".format(email))
             result=cur.fetchone()
+            print(result,encryptedLoginPassword)
             if result == encryptedLoginPassword:
                 favourites = []
                 session['username'] = email
@@ -45,7 +46,7 @@ def loginAccount(n_clicks,email,password):
                 result = cur.fetchall()
                 for ticker in result:
                     favourites.append(str(ticker))
-                if favourites == []:
+                if favourites == None:
                     favourites =  ['SPY']
                 print(favourites)
                 return 'Login successful ' + str(session['username']) + ', you may exit the modal', 'Logged in as ' + str(email),[{'key': i, 'value': i} for i in favourites]
