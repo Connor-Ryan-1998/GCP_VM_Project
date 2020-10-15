@@ -1,8 +1,6 @@
+#Module Import
 from config import *
-# from dash.dependencies import Input, Output, State
-# from pandas_datareader import data as pdr
-# import plotly.express as px
-# import dash_core_components as dcc
+
 
 try:
     conn = psycopg2.connect(
