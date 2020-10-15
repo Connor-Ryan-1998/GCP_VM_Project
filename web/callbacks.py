@@ -28,13 +28,15 @@ def toggle_login_modal(n1, n2, is_open):
     Output("loggedInStatusSuccess", "children"),
     Output("loggedInStatus", "children"),
     Output("favouritesDropdown","options"),
+    Output("login_email","value"),
+    Output("login_pw","value"),
     [Input("loginButton", "n_clicks")],
     [dash.dependencies.State("login_email", "value"),
     dash.dependencies.State("login_pw", "value")],
 )
 def loginAccount(n_clicks,email,password):
     try:
-        if (n_clicks):
+        if (n_clicks > 0):
             cur = conn.cursor()
             #encrypt LOGIN password
             encryptedLoginPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
@@ -49,13 +51,13 @@ def loginAccount(n_clicks,email,password):
                     favourites.append(str(ticker[0]))
                 if favourites == None:
                     favourites =  ['SPY']
-                return 'Login successful ' + str(session['username']) + ', you may exit the modal', 'Logged in as ' + str(email),[{'label': str(i), 'value': str(i)} for i in favourites]
+                return 'Login successful ' + str(session['username']) + ', you may exit the modal', 'Logged in as ' + str(email),[{'label': str(i), 'value': str(i)} for i in favourites],'',''
             else:
                 cur.execute("rollback;")
-                return 'Authentication failed: Please check username/password','Login failed (please try again)', [{'label': 'SPY', 'value': 'SPY'}]
+                return 'Authentication failed: Please check username/password','Login failed (please try again)', [{'label': 'SPY', 'value': 'SPY'}],'',''
     except Exception as e:
         cur.execute("rollback;")
-        return 'Error: ' + str(e),'Login failed (please try again)', [{'key': 'SPY', 'value': 'SPY'}]
+        return 'Error: ' + str(e),'Login failed (please try again)', [{'key': 'SPY', 'value': 'SPY'}],'',''
 
 ##Register Callbacks
 @app.callback(
@@ -76,7 +78,7 @@ def toggle_register_modal(n1, n2, is_open):
 )
 def registerAccount(n_clicks,email,password):
     try:
-        if (n_clicks):
+        if (n_clicks > 0):
             #encrypt password
             encryptedPassword = base64.b64encode(password.encode("utf-8")).decode("utf-8")
             currentDateTime = datetime.now()
@@ -129,19 +131,28 @@ def generate_chartFromFavourites(value):
     [Input("Generate", "n_clicks")],
     [dash.dependencies.State('dateTimePicker', 'start_date'),
     dash.dependencies.State('dateTimePicker', 'end_date'),
+    dash.dependencies.State('dropdownIntervals', 'value'),
     dash.dependencies.State("stock_ticker", "value")])
-def generate_chart(n_clicks, start_date, end_date, value):
+def generate_chart(n_clicks, start_date, end_date, interval, value):
     if n_clicks == None:
         n_clicks = 0
-    elif (n_clicks > -1):
+    elif (n_clicks > 0):
         try:
-            df = pdr.get_data_yahoo(value, start=start_date, end=end_date)
-            fig = px.line(df, x=df.index, y='Close')
+            if start_date == end_date:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')+timedelta(hours=24)
+                df = pdr.get_data_yahoo(value, start=start_date, end=end_date ,interval=interval)
+                fig = px.line(df, x=df.index, y='Close')
+            else:
+                df = pdr.get_data_yahoo(value, start=start_date, end=end_date, interval=interval)
+                fig = px.line(data_frame=df, x=df.index, y='Close')
+            dataExportcsv = df.to_csv(index=False,encoding='utf-8')
+            dataExportdfcsv = "data:text/csv;charset=utf-8," + urllib.parse.quote(dataExportcsv)
             df = pd.DataFrame.from_dict([yf.Ticker(value).info])
             del df['longBusinessSummary']
             data = df.to_dict('rows')
             columns =  [{"name": i, "id": i,} for i in (df.columns)]
-            return dcc.Graph(figure=fig), [dash_table.DataTable(id='fundamentalsTable',
+            chartMainGraph = dcc.Graph(figure=fig)
+            chartMainFundamentals = [dash_table.DataTable(id='fundamentalsTable',
                                                                 data=data, columns=columns,
                                                                 editable=False,
                                                                 sort_action="native",
@@ -188,6 +199,8 @@ def generate_chart(n_clicks, start_date, end_date, value):
                                                                 ]
                 )
             ]
+            return [html.A('Export Data', id="exportData",download="{}-data-for_{}_to_{}.csv".format(value,start_date,end_date), href=str(dataExportdfcsv),target="_blank"),
+                    chartMainGraph], chartMainFundamentals
         except Exception as e:
             return 'Error: '+ str(e), 'No Fundamentals'
 

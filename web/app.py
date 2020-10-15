@@ -1,6 +1,8 @@
 #Module Import
 from callbacks import * 
 
+
+
 dropdown = dcc.Dropdown(
     placeholder="Favourites",
     id='favouritesDropdown',
@@ -62,7 +64,7 @@ navbar = dbc.NavbarSimple(
                 form1,
                 html.Div(children=[],id='registeredStatus'),
                 dbc.ModalFooter(children=[
-                    dbc.Button("Register", color="primary",id="registerButton"),
+                    dbc.Button("Register", color="primary",id="registerButton", n_clicks = 0),
                     dbc.Button("Close", id="close_register", className="ml-auto")]
                 ),
             ],
@@ -76,7 +78,7 @@ navbar = dbc.NavbarSimple(
                 form2,
                 html.Div(children=[],id='loggedInStatusSuccess'),
                 dbc.ModalFooter(children=[
-                    dbc.Button("Login", color="primary", id="loginButton"),
+                    dbc.Button("Login", color="primary", id="loginButton", n_clicks = 0),
                     dbc.Button("Close", id="close", className="ml-auto")]
                 ),
             ],
@@ -93,22 +95,38 @@ navbar = dbc.NavbarSimple(
 app.layout = html.Div(children=[navbar,
     html.Div(children = [
         html.H4(children=['Stock Monitor + Fundamentals'],id='headerTitle'),
-        html.Div([dbc.Input(placeholder="Enter stock...", type="text",id="stock_ticker",style={"margin" : "2px","width" : "15%","padding" : "2%"}),
+        html.Div(
+        [dbc.Input(placeholder="Enter stock ticker...", type="text",id="stock_ticker",style={"margin" : "2px","width" : "25%"}),
+        dcc.Dropdown(id="dropdownIntervals",
+            placeholder = "Select interval",
+            options = [
+                    {'label' : '2 Minute', 'value' : '2m'},
+                    {'label' : '30 Minutes', 'value' : '30m'},
+                    {'label' : 'Daily', 'value' : '1d'},
+                    {'label' : 'Weekly', 'value' : '1wk'},
+                    {'label' : 'Monthly', 'value' : '1mo'}                            
+            ],style={"width" : "50%","margin" : "1px"}), 
         dcc.DatePickerRange(
             id='dateTimePicker',
             min_date_allowed=date(1995, 8, 5),
             initial_visible_month=date.today(),
             start_date=date.today()-timedelta(days=7),
             end_date=date.today(),
+            style={"margin" : "4px"}
         )]),
         html.Br(),
         html.Div(children=[],id='favouritesOutPut'),
-        dbc.Button("Generate Chart", id="Generate",style={"margin" : "2px"}),
+        html.Div(children=[],id='dataExportOutput'),
+        dbc.Button("Generate Chart", id="Generate",style={"margin" : "2px"}, n_clicks = 0),                   
         dbc.Button("Add To Favourites", id="addToFavourites")],
         style={"padding-left" : "40%","padding-top" : "2%"}),
-        html.Div(children=[
+        html.Div(
+                [dcc.Loading(
+                        id="loadingMain",
+                        children=[
                         html.Div(children=[],id='chartmain'),
-                        html.Div(children=[],id='fundamentals')
-                ],
+                        html.Div(children=[],id='fundamentals')],
+                        type="circle",
+                        style={"padding-top" : "20%"})],
         id = 'mainDiv')
 ])
