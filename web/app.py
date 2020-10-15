@@ -135,11 +135,6 @@ app.layout = html.Div(children=[navbar,
         dbc.Button("Add To Favourites", id="addToFavourites")],
         style={"padding-left" : "40%","padding-top" : "2%"}),
         html.Div(children=[
-                        html.Div(children=[],id='chartmainF'),
-                        html.Div(children=[],id='fundamentalsF')
-                        ],
-                id = 'favouritesDiv'),
-        html.Div(children=[
                         html.Div(children=[],id='chartmain'),
                         html.Div(children=[],id='fundamentals')
                 ],
