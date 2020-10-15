@@ -141,12 +141,20 @@ def generate_chart(n_clicks, start_date, end_date, interval, value):
             if start_date == end_date:
                 end_date = datetime.strptime(end_date, '%Y-%m-%d')+timedelta(hours=24)
                 df = pdr.get_data_yahoo(value, start=start_date, end=end_date ,interval=interval)
-                fig = px.line(df, x=df.index, y='Close')
+                fig = px.line(data_frame=df, x=df.index, y='Close')
             else:
                 df = pdr.get_data_yahoo(value, start=start_date, end=end_date, interval=interval)
                 fig = px.line(data_frame=df, x=df.index, y='Close')
+            fig.update_layout(title ={'text' :'Stock Value of ' + value  +':' + start_date + ' to ' + end_date, 'y': 0.9, 'x':0.5,'xanchor':'center','yanchor':'top'},
+                            xaxis_title='Interval: ' + interval,
+                            yaxis_title='Stock Doller Value',
+                            title_font_family = "Roboto",
+                            titlefont = {"size": 18})
+            ##add export dataframe controls
             dataExportcsv = df.to_csv(index=False,encoding='utf-8')
             dataExportdfcsv = "data:text/csv;charset=utf-8," + urllib.parse.quote(dataExportcsv)
+            
+            #Fundamental data ctonrls
             df = pd.DataFrame.from_dict([yf.Ticker(value).info])
             del df['longBusinessSummary']
             data = df.to_dict('rows')
