@@ -2,6 +2,7 @@ version: '3.7'
 services:
   flask:
     image: webapp-flask
+    restart: always
     build: ./web
     ports:
       - 9090:9090
