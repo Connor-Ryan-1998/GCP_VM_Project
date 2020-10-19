@@ -19,6 +19,8 @@ git clone https://github.com/Connor-Ryan-1998/GCP_VM_Project.git && cd GCP_VM_Pr
 sudo docker-compose build
 sudo docker-compose -f docker-compose.yml up -d 
  
+# For presentation
+sudo docker-compose up -d
 
 # Dont forget to remove existing db 
 # Test/Debug
